@@ -1,0 +1,47 @@
+<configuration>
+  <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d %-5level: [%c{1}] %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <!-- billlogging appender -->
+  <appender name="billing_log" class="ch.qos.logback.core.FileAppender">
+    <File>billing.log</File>
+    <append>true</append>
+    <encoder>
+      <pattern>%m%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="server_log" class="ch.qos.logback.core.FileAppender">
+    <File>server.log</File>
+    <append>true</append>
+    <encoder>
+      <pattern>%d %-5level: [%c{1}] %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="ASYNC_BL" class="ch.qos.logback.classic.AsyncAppender">
+    <appender-ref ref="billing_log" />
+  </appender>
+
+  <root level="INFO">
+    <appender-ref ref="stdout" />
+    <appender-ref ref="server_log" />
+  </root>
+
+  <logger name="com.flow.platform.sharding"><level value="WARN" /></logger>
+  <logger name="com.flow.platform.persistence"><level value="WARN" /></logger>
+  <logger name="com.flow.platform.io.binary"><level value="WARN" /></logger>
+  <logger name="com.flow.platform.message.MessageCallback"> <level value="WARN" /></logger>
+  <logger name="com.flow.platform.guice.LogService"> <level value="WARN" /></logger>
+  <logger name="com.flow.platform.persistence.TransactionLogger" additivity="false">
+    <level value="WARN" />
+    <appender-ref ref="ASYNC_BL" />
+  </logger>
+
+  <!-- quartz history runs on a default INFO level.-->
+  <logger name="org"><level value="WARN" /></logger>
+  <logger name="org.quartz.plugins.history"><level value="WARN" /></logger>
+</configuration>
